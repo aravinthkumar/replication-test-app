@@ -48,6 +48,8 @@ pipeline {
   post{
     success {
       archiveArtifacts 'test-result.txt'
+      slackSend channel: '#q4-budget',
+                message: "Release ${env.RELEASE},success: ${currentBuild.fullDisplayName}."
     }
   }
 }
