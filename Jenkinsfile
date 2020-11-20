@@ -1,15 +1,22 @@
 pipeline {
   agent any
+    environment {
+    RELEASE = '20.11'
+  }
   stages {
-    stage('stage1') {
+    stage('Build') {
+      agent any
+      environment{
+        LOG_LEVEL = 'INFO'
+      }
       steps {
-        echo "This is the build number ${env.BUILD_NUMBER} of demo ${env.DEMO}"
-        bat(script: 'echo "This is the build number  ${env.BUILD_NUMBER} of demo ${env.DEMO}"', returnStdout: true, returnStatus: true)
+        echo "Building release ${RELEASE} with log level ${LOG_LEVEL}...."
       }
     }
-
-  }
-  environment {
-    DEMO = '1'
+    stage('Test'){
+      steps{
+        echo "Testing. I can see ${RELEASE}, but not log level ${LOG_LEVEL}"
+      }
+    }
   }
 }
