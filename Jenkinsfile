@@ -30,7 +30,7 @@ pipeline {
       steps{
         echo "Testing. I can see ${RELEASE}..."
         script {
-          if(Math.random() > 0.5){
+          if (Math.random() > 0.5) {
             throw new Exception()
           }
         }
@@ -56,7 +56,7 @@ pipeline {
       slackSend channel: '#q4-budget',
                 color: 'good',
                 message: "Release ${env.RELEASE}, success: ${currentBuild.fullDisplayName}."
-    },
+    }
     failure {
       slackSend channel: '#q4-budget',
                 color: 'danger',
