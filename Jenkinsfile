@@ -100,4 +100,3 @@ String getVersionSuffix(){
       return env.VERSION_RC + 'ci' + env.BUILD_NUMBER
     }
   }
-}
