@@ -1,3 +1,6 @@
+library identifier: 'jenkins-library@main',
+        retriever: modernSCM([$class: 'GitSCMSource',remote: 'https://github.com/aravinthkumar/jenkins-library.git'])
+
 pipeline {
   agent any
   parameters {
@@ -84,13 +87,6 @@ pipeline {
   }
 }
 
-void auditTools(){
-  bat '''
-  git version
-  cf --version
-  '''
-
-}
 
 String getVersionSuffix(){
   if (params.RC){
