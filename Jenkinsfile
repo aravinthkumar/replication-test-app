@@ -95,7 +95,8 @@ void auditTools(){
 String getVersionSuffix(){
   if (params.RC){
     return env.VERSION_RC
-    else{
+  }
+    else {
       return env.VERSION_RC + 'ci' + env.BUILD_NUMBER
     }
   }
