@@ -1,17 +1,28 @@
 pipeline {
   agent any
+  parameters{
+    booleanParam(name: 'RC',defaultValue: false,description: 'Is a Release Candidate?')
+  }
     environment {
     RELEASE = '20.11'
+    VERSION = "0.1.0"
+    VERSION_RC = "rc.2"
   }
   stages {
+    stage('Audit Tools'){
+      steps {
+           auditTools()
+      }
+    }
     stage('Build') {
       environment{
         LOG_LEVEL = 'INFO'
+        VERSION_SUFFIX = getVersionSuffix()
       }
       parallel {
         stage('linux-arm64'){
           steps {
-            echo "Building release ${RELEASE} for ${STAGE_NAME} with log level ${LOG_LEVEL}...."
+            echo "Building release ${VERSION} with suffix: ${VERSION_SUFFIX} for ${STAGE_NAME} with log level ${LOG_LEVEL}...."
           }
         }
         stage('linux-amd64'){
@@ -49,6 +60,14 @@ pipeline {
       echo "Deploying release ${RELEASE} to environment ${TARGET_ENVIRONMENT}"
     }
     }
+    stage('Publish'){
+      when {
+        expression { return params.RC }
+      }
+      steps {
+        bat ''' echo Published '''
+      }
+    }
   }
   post{
     success {
@@ -61,6 +80,23 @@ pipeline {
       slackSend channel: '#q4-budget',
                 color: 'danger',
                 message: "Release ${env.RELEASE}, FAILED: ${currentBuild.fullDisplayName}."
+    }
+  }
+}
+
+void auditTools(){
+  bat '''
+  git version
+  cf --version
+  '''
+
+}
+
+String getVersionSuffix(){
+  if (params.RC){
+    return env.VERSION_RC
+    else{
+      return env.VERSION_RC + 'ci' + env.BUILD_NUMBER
     }
   }
 }
