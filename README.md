@@ -1,2 +1,2 @@
 # replication-test-app
-I/O Intensive application
+An I/O Intensive application
